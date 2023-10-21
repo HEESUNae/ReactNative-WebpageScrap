@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { View, StyleSheet, FlatList, SectionList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRecoilValue } from 'recoil';
@@ -25,18 +25,57 @@ export default function LinkListScreen() {
     navigation.navigate('AddLink');
   }, []);
 
+  // sectionList
+  const sectionData = useMemo(() => {
+    const dataList = {};
+
+    // 생성일자 string
+    const makeDataString = (createdAt) => {
+      const dataItem = new Date(createdAt);
+
+      return `${dataItem.getFullYear()}. ${dataItem.getMonth()}. ${dataItem.getDay()} ${dataItem.getMinutes()} ${dataItem.getMinutes()}`;
+    };
+
+    if (!data.list) return [];
+
+    data.list.forEach((item) => {
+      const keyName = makeDataString(item.createdAt);
+      if (!dataList[keyName]) {
+        dataList[keyName] = [item];
+      } else {
+        dataList[keyName].push(item);
+      }
+    });
+
+    return Object.keys(dataList).map((item) => {
+      return {
+        title: item,
+        data: dataList[item],
+      };
+    });
+  }, [data.list]);
+
   return (
     <View style={{ flex: 1 }}>
       <Header>
         <HeaderTitle title="LINK LIST" />
       </Header>
-      <FlatList
-        data={data.list}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 20 }}
-        ItemSeparatorComponent={<View style={{ height: 20 }}></View>}
+
+      <SectionList
+        style={{ flex: 1 }}
+        sections={sectionData}
+        renderSectionHeader={({ section }) => {
+          return (
+            <View style={{ paddingHorizontal: 12, paddingVertical: 4, backgroundColor: 'white' }}>
+              <Typography color="gray" size={12}>
+                {section.title}
+              </Typography>
+            </View>
+          );
+        }}
         renderItem={({ item }) => (
           <Button onPress={() => onPressListItem(item)}>
-            <View>
+            <View style={{ padding: 16 }}>
               <Typography size={20}>{item.link}</Typography>
               <Spacer space={4} />
               <Typography fontSize={16} color="gray">
@@ -46,7 +85,6 @@ export default function LinkListScreen() {
           </Button>
         )}
       />
-      <Typography>dd</Typography>
       <View style={{ position: 'absolute', right: 24, bottom: 24 + safeAreaInset.bottom }}>
         <Button onPress={onPressButton}>
           <View style={styles.gotoAddBtn}>

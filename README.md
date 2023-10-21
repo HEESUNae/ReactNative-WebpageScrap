@@ -15,8 +15,10 @@
 ### 기술스택
 
 ReactNative(expo), JavaScript,  
-@react-navigation/native, react-native-safe-area-context, react-native-screens,
+@react-navigation/native, react-native-safe-area-context,  
+react-native-screens,
 recoil,
 react-native-webview,  
 @react-native-async-storage/async-storage
-react-native-opengraph-kit, expo-clipboard
+react-native-opengraph-kit,  
+expo-clipboard
