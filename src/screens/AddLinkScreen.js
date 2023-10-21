@@ -12,6 +12,7 @@ import Typography from '../components/Typography';
 import Button from '../components/Button';
 import Spacer from '../components/Spacer';
 import { getOpenGraphData } from '../utils/OpenGraphData';
+import { getClipboardString } from '../utils/ClipboardUtils';
 
 const AddLinkScreen = () => {
   const navigation = useNavigation();
@@ -44,10 +45,30 @@ const AddLinkScreen = () => {
     setUrl('');
   }, [url]); // url 변경되면 실행
 
+  // 엔터키 누르면 오픈그래프 표출
   const onSubmitEditing = useCallback(async () => {
     const result = await getOpenGraphData(url);
     setMetaData(result);
   }, [url]);
+
+  // https://naver.com
+  // 클립보드
+  const onGetClipboardString = useCallback(async () => {
+    const result = await getClipboardString();
+    if (result.startsWith('https://') || result.startsWith('http://')) {
+      setUrl(result);
+      const onResult = await getOpenGraphData(result);
+      setMetaData({
+        title: onResult.title,
+        image: onResult.image,
+        description: onResult.description,
+      });
+    }
+  });
+
+  useEffect(() => {
+    onGetClipboardString();
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>
