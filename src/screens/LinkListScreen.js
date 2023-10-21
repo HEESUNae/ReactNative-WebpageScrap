@@ -21,8 +21,8 @@ export default function LinkListScreen() {
     navigation.navigate('LinkDetail', { item });
   }, []);
 
-  const onPressButton = useCallback((url) => {
-    navigation.navigate(url);
+  const onPressButton = useCallback(() => {
+    navigation.navigate('AddLink');
   }, []);
 
   return (
@@ -48,7 +48,7 @@ export default function LinkListScreen() {
       />
       <Typography>dd</Typography>
       <View style={{ position: 'absolute', right: 24, bottom: 24 + safeAreaInset.bottom }}>
-        <Button onPress={() => onPressButton('AddLink')}>
+        <Button onPress={onPressButton}>
           <View style={styles.gotoAddBtn}>
             <Icon name="add" color="white" size={32} />
           </View>

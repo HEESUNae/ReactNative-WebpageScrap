@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput } from 'react-native';
 
-const SingleLineInput = ({ value, onChangeText, placeholder, style, fontSize }) => {
+const SingleLineInput = (props) => {
   const [focused, setFocused] = useState(false);
 
   return (
@@ -17,12 +17,13 @@ const SingleLineInput = ({ value, onChangeText, placeholder, style, fontSize }) 
     >
       <TextInput
         autoCorrect={false}
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        style={[style, { fontSize: fontSize ?? 20 }]}
+        value={props.value}
+        onChangeText={props.onChangeText}
+        placeholder={props.placeholder}
+        style={[props.style, { fontSize: props.fontSize ?? 20 }]}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        onSubmitEditing={props.onSubmitEditing}
       />
     </View>
   );
